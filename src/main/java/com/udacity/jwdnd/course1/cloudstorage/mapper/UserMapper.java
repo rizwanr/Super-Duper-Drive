@@ -17,5 +17,7 @@ import org.apache.ibatis.annotations.Select;
         @Insert("INSERT INTO USERS (userId, username, salt, password, firstname, lastname) VALUES(#{userId}, #{username}, #{salt}, #{password}, #{firstName}, #{lastName})")
         @Options(useGeneratedKeys = true, keyProperty = "userId")
         int  insert(User user);
+
+
     }
 
