@@ -35,9 +35,9 @@ public class NoteController {
     @PostMapping("add-note")
     public String addNotes(Authentication auth, @ModelAttribute("noteForm") NoteForm noteForm, Model model){
         String username = auth.getName();
-        String newTitle = noteForm.getNotetitle();
-        String newDescription = noteForm.getNotedescription();
-        String noteId = noteForm.getNoteid();
+        String newTitle = noteForm.getNoteTitle();
+        String newDescription = noteForm.getNoteDescription();
+        String noteId = noteForm.getNoteId();
         if (noteId.isEmpty()){
             noteService.addNotes(newTitle, newDescription, username);
         }else{

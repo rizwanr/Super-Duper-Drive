@@ -7,8 +7,8 @@ import java.util.List;
 
 @Mapper
 public interface NoteMapper {
-    @Insert("INSERT INTO NOTES ( notetitle, notedescription, userid) VALUES( #{notetitle}, #{notedescription},#{userid})")
-    @Options(useGeneratedKeys = true, keyProperty = "noteid")
+    @Insert("INSERT INTO NOTES ( notetitle, notedescription, userid) VALUES( #{noteTitle}, #{noteDescription},#{userid})")
+    @Options(useGeneratedKeys = true, keyProperty = "noteId")
     int insert(Note note);
 
 
@@ -23,7 +23,7 @@ public interface NoteMapper {
     Note removeNote(Integer noteid);
 
 
-    @Update("UPDATE NOTES SET notetitle = #{noteTitle}, notedescription = #{noteDescription} WHERE noteid = #{noteId}")
+    @Update("UPDATE NOTES SET notetitle = #{notetitle}, notedescription = #{notedescription} WHERE noteid = #{noteid}")
     void updateNote(Integer noteId, String title, String description);
 
 }
