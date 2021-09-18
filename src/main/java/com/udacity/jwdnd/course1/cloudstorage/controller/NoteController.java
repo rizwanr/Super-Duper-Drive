@@ -7,10 +7,7 @@ import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("note")
@@ -29,25 +26,52 @@ public class NoteController {
     public String getHome(Authentication auth, @ModelAttribute("noteForm") NoteForm noteForm, Model model){
         User user =userService.getUser(auth.getName());
         model.addAttribute("notes",this.noteService.getNotes(user.getUserId()));
-        return "home";
+        return "redirect:/home";
     };
 
-    @PostMapping("add-note")
+    @PostMapping("add-update-note")
     public String addNotes(Authentication auth, @ModelAttribute("noteForm") NoteForm noteForm, Model model){
         String username = auth.getName();
         String newTitle = noteForm.getNoteTitle();
         String newDescription = noteForm.getNoteDescription();
-        String noteId = noteForm.getNoteId();
-        if (noteId.isEmpty()){
+        Integer noteId = noteForm.getNoteId();
+        if (noteId == null){
             noteService.addNotes(newTitle, newDescription, username);
-        }else{
-            noteService.updateNote(Integer.parseInt(noteId), newTitle, newDescription);
+        }
+        else{
+            noteService.updateNote(noteId, newTitle, newDescription);
         }
 
-        String userName = auth.getName();
-        Integer userId = userService.getUser(userName).getUserId();
+        Integer userId = userService.getUser(username).getUserId();
         model.addAttribute("notes", noteService.getNotes(userId));
 
-        return "home";
+        return "redirect:/home";
     }
+
+//
+//    @PostMapping("/edit-note/{noteId}")
+//    public String updateNote(@PathVariable(value = "noteId") Integer noteId, Authentication auth, @ModelAttribute("note") Note note, Model model){
+//        System.out.println("Edit button called");
+//        String username = auth.getName();
+//        String updateTitle = note.getNoteTitle();
+//        String updateDescription = note.getNoteDescription();
+//        noteService.updateNote(noteId,updateTitle, updateDescription);
+//        Integer userId = userService.getUser(username).getUserId();
+//        model.addAttribute("notes", noteService.getNotes(userId));
+//        return "redirect:/home";
+//    }
+
+
+    @GetMapping("/delete-note/{noteId}")
+    public String removeNote(@PathVariable(value = "noteId") Integer noteId, Authentication auth,  Model model){
+    noteService.deleteNote(noteId);
+    return "redirect:/home";
+
+    }
+
+
+
+
+
+
 }

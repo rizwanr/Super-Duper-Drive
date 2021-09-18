@@ -77,8 +77,15 @@
                         <tbody>
                         <tr th:each="note : ${notes}">
                             <td>
-                                <button type="button" class="btn btn-success">Edit</button>
-                                <a class="btn btn-danger">Delete</a>
+                                <button class="btn btn-success"
+                                        id="btnEditNote" type="button"
+                                        th:data-id="${note.getNoteId()}"
+                                        th:data-title="${note.getNoteTitle()}"
+                                        th:data-description="${note.getNoteDescription()}"
+                                        th:onclick="showNoteModal(this.getAttribute('data-id'), this.getAttribute('data-title'), this.getAttribute('data-description'))"
+                                        name="edit">Edit</button>
+<!--                         For Deleting of Notes, pass the NoteId as the parameter to the controller so that you can delete the particular note.-->
+                             <a th:href ="@{/note/delete-note/{noteId}(noteId = ${note.noteId})}" class="btn btn-danger">Delete</a>
                             </td>
                             <th scope="row" th:text="${note.getNoteTitle()}">Example Note Title</th>
                             <td th:text="${note.getNoteDescription()}">Example Note Description </td>
@@ -97,7 +104,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form action="#"  th:object="${noteForm}"  th:action="@{/note/add-note}" method="POST">
+                                <form action="#"  th:object="${noteForm}"  th:action="@{/note/add-update-note}" method="POST">
                                     <input type="hidden" name="noteId" th:field ="*{noteId}" id="note-id">
                                     <div class="form-group">
                                         <label for="note-title" class="col-form-label">Title</label>
