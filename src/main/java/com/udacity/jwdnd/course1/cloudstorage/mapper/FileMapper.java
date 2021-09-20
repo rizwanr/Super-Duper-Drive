@@ -17,11 +17,14 @@ import java.util.List;
         @Select("SELECT * FROM FILES WHERE userid = #{userId}")
         List<File>  getFileForUsers(Integer userId);
 
-        @Select("SELECT * FROM FILES WHERE fileId = #{fileId}")
+        @Select("SELECT * FROM FILES WHERE fileid = #{fileId}")
         File getFileById(Integer fileId);
 
+        @Select("SELECT * FROM FILES WHERE filename = #{fileName}")
+        File getFileByName( String fileName);
 
-        @Delete("DELETE from FILES WHERE fileid=#{fileid} ")
+
+        @Delete("DELETE from FILES WHERE fileid=#{fileId} ")
         void removeFile(Integer fileid);
 
 
