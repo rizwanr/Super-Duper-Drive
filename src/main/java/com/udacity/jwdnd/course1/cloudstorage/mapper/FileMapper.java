@@ -17,6 +17,10 @@ import java.util.List;
         @Select("SELECT * FROM FILES WHERE userid = #{userId}")
         List<File>  getFileForUsers(Integer userId);
 
+        @Select("SELECT * FROM FILES WHERE fileId = #{fileId}")
+        File getFileById(Integer fileId);
+
+
         @Delete("DELETE from FILES WHERE fileid=#{fileid} ")
         void removeFile(Integer fileid);
 

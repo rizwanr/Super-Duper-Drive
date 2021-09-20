@@ -24,13 +24,9 @@ public class FileService {
 
     }
 
-
-//    private Integer fileId;
-//    private String filename;
-//    private String contenttype;
-//    private Long filesize;
-//    private Integer userid;
-//    private List<Byte> filedata;;
+    public File getFileById(Integer fileId){
+        return fileMapper.getFileById(fileId);
+    }
 
     public List<File> getListOfFilesForUsers(Integer userId){
        return  fileMapper.getFileForUsers(userId);

@@ -4,6 +4,9 @@ import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,10 +41,7 @@ public class FileUploadController {
         String username = auth.getName();
         Integer userId = userService.getUser(username).getUserId();
         fileService.addFiles(fileUpload.getOriginalFilename(),fileUpload.getContentType(), fileUpload.getSize(),userId,fileUpload.getBytes());
-
-
         model.addAttribute("files", fileService.getListOfFilesForUsers(userId));
-
         return "redirect:/home";
 
 
@@ -56,6 +56,22 @@ public class FileUploadController {
 
     }
 
+//    Return type to ResponseEntity<byte[]> since we will use it so that the file can be displayed or downloaded
+//    Use the FileService getFileById method to return the file that matches the submitted id
+//    Put the name of the file in a variable named filename to be placed in the org.springframework.http.ResponseEntity composition
+//    Use ResponseEntity to display the file or open the download window
+
+    @GetMapping("/view-file/{fieldId}")
+    public ResponseEntity<byte[]> viewFile(@PathVariable(value ="fieldId") Integer fieldId, Model model){
+        System.out.println("File " + fieldId + " was viewed");
+        File file = fileService.getFileById(fieldId);
+        String fileName = file.getFileName();
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(file.getContentType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; fileName=\""+ fileName+"\"")
+                .body(file.getFileData());
+    }
 }
 
 
