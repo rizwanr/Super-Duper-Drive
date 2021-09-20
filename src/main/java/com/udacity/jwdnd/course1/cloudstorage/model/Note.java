@@ -19,6 +19,13 @@ public class Note {
         this.userid = userId;
     }
 
+    public Integer getUserid() {
+        return userid;
+    }
+
+    public void setUserid(Integer userid) {
+        this.userid = userid;
+    }
 
 
     public Integer getNoteId() {

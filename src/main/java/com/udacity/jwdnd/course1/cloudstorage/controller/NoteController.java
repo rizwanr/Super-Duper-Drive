@@ -1,6 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
-import com.udacity.jwdnd.course1.cloudstorage.model.NoteForm;
+import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
@@ -23,18 +23,18 @@ public class NoteController {
 
 
     @GetMapping
-    public String getHome(Authentication auth, @ModelAttribute("noteForm") NoteForm noteForm, Model model){
+    public String getHome(Authentication auth, @ModelAttribute("noteForm") Note note, Model model){
         User user =userService.getUser(auth.getName());
         model.addAttribute("notes",this.noteService.getNotes(user.getUserId()));
         return "redirect:/home";
     };
 
     @PostMapping("add-update-note")
-    public String addNotes(Authentication auth, @ModelAttribute("noteForm") NoteForm noteForm, Model model){
+    public String addNotes(Authentication auth, @ModelAttribute("noteForm") Note note, Model model){
         String username = auth.getName();
-        String newTitle = noteForm.getNoteTitle();
-        String newDescription = noteForm.getNoteDescription();
-        Integer noteId = noteForm.getNoteId();
+        String newTitle = note.getNoteTitle();
+        String newDescription = note.getNoteDescription();
+        Integer noteId = note.getNoteId();
         if (noteId == null){
             noteService.addNotes(newTitle, newDescription, username);
         }
