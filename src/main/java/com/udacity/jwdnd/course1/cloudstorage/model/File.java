@@ -1,18 +1,15 @@
 package com.udacity.jwdnd.course1.cloudstorage.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class File {
 
     private Integer fileId;
     private String filename;
     private String contenttype;
-    private String filesize;
+    private Long filesize;
     private Integer userid;
-    private List<Byte> filedata;;
+    private byte [] filedata;;
 
-    public File(Integer fileId, String filename, String contenttype, String filesize, Integer userId, ArrayList<Byte> filedata) {
+    public File(Integer fileId, String filename, String contenttype, Long filesize, Integer userId,byte [] filedata) {
         this.fileId = fileId;
         this.filename = filename;
         this.contenttype = contenttype;
@@ -47,11 +44,11 @@ public class File {
         this.contenttype = contenttype;
     }
 
-    public String getFileSize() {
+    public Long getFileSize() {
         return filesize;
     }
 
-    public void setFileSize(String fileSize) {
+    public void setFileSize(Long fileSize) {
         this.filesize = fileSize;
     }
 
@@ -63,11 +60,11 @@ public class File {
         this.userid = userId;
     }
 
-    public List<Byte> getFileData() {
+    public byte[] getFileData() {
         return filedata;
     }
 
-    public void setFileData(List<Byte> fileData) {
+    public void setFileData(byte[] fileData) {
         this.filedata = fileData;
     }
 
