@@ -48,18 +48,6 @@ public class NoteController {
         return "redirect:/home";
     }
 
-//
-//    @PostMapping("/edit-note/{noteId}")
-//    public String updateNote(@PathVariable(value = "noteId") Integer noteId, Authentication auth, @ModelAttribute("note") Note note, Model model){
-//        System.out.println("Edit button called");
-//        String username = auth.getName();
-//        String updateTitle = note.getNoteTitle();
-//        String updateDescription = note.getNoteDescription();
-//        noteService.updateNote(noteId,updateTitle, updateDescription);
-//        Integer userId = userService.getUser(username).getUserId();
-//        model.addAttribute("notes", noteService.getNotes(userId));
-//        return "redirect:/home";
-//    }
 
 
     @GetMapping("/delete-note/{noteId}")
