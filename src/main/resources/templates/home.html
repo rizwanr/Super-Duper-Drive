@@ -145,18 +145,19 @@
                             <td>
                                 <button type="button" class="btn btn-success"
                                         id="btnEditCredential"
-<!--                                        th:data-id="${credential.getCredentialId()}"-->
-<!--                                        th:data-url="${credential.getUrl()}"-->
-<!--                                        th:data-username="${credential.getUsername()}"-->
-<!--                                        th:data-password="{encryptionService.decryptValue(credential.password, credential.key)}"-->
-<!--                                        th:onclick="showCredentialModal(this.getAttribute('data-id'), this.getAttribute('data-url'),-->
-<!--                                         this.getAttribute('data-username'), this.getAttribute('data-password'))"-->
-<!--                                        name="edit"-->
+                                        th:data-id="${credential.getCredentialId()}"
+                                        th:data-url="${credential.getUrl()}"
+                                        th:data-username="${credential.getUsername()}"
+                                        th:data-password="${encryptionService.decryptValue(credential.getPassword(), credential.getKey())}"
+                                        th:onclick="showCredentialModal(this.getAttribute('data-id'), this.getAttribute('data-url'),
+                                         this.getAttribute('data-username'), this.getAttribute('data-password'))"
+                                        name="edit"
                                 >Edit</button>
-                                <a class="btn btn-danger" >Delete</a>
-<!--                                th:href ="@{/credential/delete-credential/{credentialId}(credentialId =-->
-<!--                                a${credential.credentialId})}"-->
+                                <a class="btn btn-danger"  th:href ="@{/credential/delete-credential/{credentialId}(credentialId =
+                                ${credential.credentialId})}" >Delete</a>
+
                             </td>
+
                             <th scope="row" th:text="${credential.getUrl()}">Example Credential URL</th>
                             <td  th:text="${credential.getUsername()}" >Example Credential Username</td>
                             <td th:text="${credential.getPassword()}" >Example Credential Password</td>
