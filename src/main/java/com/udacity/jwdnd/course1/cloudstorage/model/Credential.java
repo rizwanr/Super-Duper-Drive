@@ -9,11 +9,14 @@ public class Credential {
     private String password;
     private Integer userid;
 
-    public Credential(Integer credentialId, String url, String username, String key, String password, Integer userid) {
-        this.credentialId = credentialId;
+    public Credential(){
+
+    }
+
+    public Credential (Integer credentialId, String url, String username,String key, String password, Integer userid) {
         this.url = url;
         this.username = username;
-        this.key = key;
+        this.key=key;
         this.password = password;
         this.userid = userid;
     }

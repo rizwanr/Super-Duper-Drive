@@ -35,13 +35,14 @@ public class HomeController {
 
 
     @GetMapping()
-    public String getHome(Authentication auth, @ModelAttribute("noteForm") Note note , @ModelAttribute("file") File file, @ModelAttribute("credentials") Credential credential,
+    public String getHome(Authentication auth, @ModelAttribute("noteForm") Note note , @ModelAttribute("file") File file, @ModelAttribute("newCredential") Credential credential,
                           @ModelAttribute("encryptionservice") EncryptionService encryptionService, Model model){
      User user =userService.getUser(auth.getName());
      model.addAttribute("files", this.fileService.getListOfFilesForUsers(user.getUserId()));
      model.addAttribute("notes",this.noteService.getNotes(user.getUserId()));
      model.addAttribute("encryptionService",encryptionService);
      model.addAttribute("credentials",this.credentialService.getCredentials(user.getUserId()));
+
      return "home";
 
     };

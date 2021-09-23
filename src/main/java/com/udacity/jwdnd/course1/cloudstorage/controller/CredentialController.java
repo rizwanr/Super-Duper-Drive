@@ -30,7 +30,7 @@ public class CredentialController {
 
 
     @GetMapping
-    public String getHome(Authentication auth, @ModelAttribute("credentials") Credential credential, @ModelAttribute("encryptionService") EncryptionService  encryptionService,
+    public String getHome(Authentication auth, @ModelAttribute("newCredential") Credential credential, @ModelAttribute("encryptionService") EncryptionService  encryptionService,
                           Model model) {
         User user = userService.getUser(auth.getName());
 
@@ -42,20 +42,20 @@ public class CredentialController {
 
 
     @PostMapping("/add-update-credential")
-    public String postNewCredential(Authentication auth, @ModelAttribute("credentials") Credential credential,@ModelAttribute("encryptionService") EncryptionService  encryptionService, Model model){
+    public String postNewCredential(Authentication auth, @ModelAttribute("newCredential") Credential credential,@ModelAttribute("encryptionService") EncryptionService  encryptionService, Model model){
         String username= auth.getName();
         Integer userId = userService.getUser(username).getUserId();
         Integer credentialId = credential.getCredentialId();
         String newUrl = credential.getUrl();
         String newUsername = credential.getUsername();
         String newPassword = credential.getPassword();
-        credential.setKey("Jj4lnbHeFj");
-        String encryptedPassword = encryptionService.encryptValue(newPassword,credential.getKey());
+//        credential.setKey("Jj4lnbHeFj");
+//        String encryptedPassword = encryptionService.encryptValue(newPassword,credential.getKey());
         if (credentialId == null){
-            credentialService.addCredentials(newUrl,newUsername,credential.getKey() ,encryptedPassword, userId);
+            credentialService.addCredentials(newUrl,newUsername,newPassword,userId);
         }
         else{
-            credentialService.modifyCredential(credentialId,newUrl, newUsername, encryptedPassword);
+            credentialService.modifyCredential(credentialId,newUrl, newUsername, newPassword);
         }
         model.addAttribute("credentials", credentialService.getCredentials(userId));
         return "redirect:/home";

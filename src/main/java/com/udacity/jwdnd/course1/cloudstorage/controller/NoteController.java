@@ -30,7 +30,7 @@ public class NoteController {
     };
 
     @PostMapping("add-update-note")
-    public String addNotes(Authentication auth, @ModelAttribute("noteForm") Note note, Model model){
+    public String postNewNotes(Authentication auth, @ModelAttribute("noteForm") Note note, Model model){
         String username = auth.getName();
         String newTitle = note.getNoteTitle();
         String newDescription = note.getNoteDescription();

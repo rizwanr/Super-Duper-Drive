@@ -52,7 +52,7 @@ public class FileUploadController {
 
 
     @PostMapping("file-upload")
-    public String handleFileUpload(Authentication auth, @RequestParam("fileUpload")MultipartFile fileUpload,
+    public String postNewFile(Authentication auth, @RequestParam("fileUpload")MultipartFile fileUpload,
                                    @ModelAttribute("files") File file,Model model) throws IOException {
         String username = auth.getName();
         Integer userId = userService.getUser(username).getUserId();
