@@ -60,6 +60,9 @@ public class FileUploadController {
         if (f == null){
             fileService.addFiles(fileUpload.getOriginalFilename(),fileUpload.getContentType(), fileUpload.getSize(),userId,fileUpload.getBytes());
         }
+        else if (f.getFileName().isEmpty()){
+            System.out.println("upload a file");
+        }
         else{
             System.out.println("Incorrect");
         }
