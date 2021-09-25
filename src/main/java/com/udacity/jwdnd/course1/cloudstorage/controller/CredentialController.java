@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @Controller
-@RequestMapping("credential")
+@RequestMapping("/credential")
 public class CredentialController {
 
 

@@ -19,14 +19,14 @@ public class NoteService {
     }
 
 
-    public void addNotes(String title,String description, String username) {
+    public int addNotes(String title,String description, String username) {
         Integer userId = userMapper.getUser(username).getUserId();
         Note note = new Note(1, title, description, userId);
-        noteMapper.insert(note);
+        return noteMapper.insert(note);
     }
 
-    public void updateNote(Integer noteId, String title, String description) {
-        noteMapper.updateNote(noteId, title, description);
+    public int updateNote(Integer noteId, String title, String description) {
+       return noteMapper.updateNote(noteId, title, description);
     }
 
     public void deleteNote(Integer noteId){

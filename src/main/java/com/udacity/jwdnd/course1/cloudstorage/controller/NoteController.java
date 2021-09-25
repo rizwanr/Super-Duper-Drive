@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("note")
+@RequestMapping("/note")
 public class NoteController {
     private final NoteService noteService;
     private final UserService userService;
@@ -31,21 +31,31 @@ public class NoteController {
 
     @PostMapping("add-update-note")
     public String postNewNotes(Authentication auth, @ModelAttribute("noteForm") Note note, Model model){
+        Integer queryResult;
         String username = auth.getName();
         String newTitle = note.getNoteTitle();
         String newDescription = note.getNoteDescription();
         Integer noteId = note.getNoteId();
         if (noteId == null){
-            noteService.addNotes(newTitle, newDescription, username);
+            queryResult = noteService.addNotes(newTitle, newDescription, username);
         }
         else{
-            noteService.updateNote(noteId, newTitle, newDescription);
+            queryResult = noteService.updateNote(noteId, newTitle, newDescription);
+        }
+
+        if (queryResult==1){
+        model.addAttribute("successMessage",true);
+        model.addAttribute("successMessage", "Your note was added successfully");
+
+        }else{
+            model.addAttribute("successMessage",true);
+            model.addAttribute("successMessage", "Your note was added successfully");
         }
 
         Integer userId = userService.getUser(username).getUserId();
         model.addAttribute("notes", noteService.getNotes(userId));
 
-        return "redirect:/home";
+        return "redirect:/result";
     }
 
 
@@ -53,7 +63,7 @@ public class NoteController {
     @GetMapping("/delete-note/{noteId}")
     public String removeNote(@PathVariable(value = "noteId") Integer noteId, Authentication auth,  Model model){
     noteService.deleteNote(noteId);
-    return "redirect:/home";
+    return "redirect:/result";
 
     }
 

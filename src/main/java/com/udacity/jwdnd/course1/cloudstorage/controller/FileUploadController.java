@@ -17,7 +17,7 @@ import java.io.IOException;
 
 
 @Controller
-@RequestMapping("file")
+@RequestMapping("/file")
 public class FileUploadController {
 
     private final FileService fileService;
