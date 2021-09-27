@@ -36,6 +36,7 @@ public class NoteController {
         String newTitle = note.getNoteTitle();
         String newDescription = note.getNoteDescription();
         Integer noteId = note.getNoteId();
+
         if (noteId == null){
             queryResult = noteService.addNotes(newTitle, newDescription, username);
         }
@@ -43,19 +44,22 @@ public class NoteController {
             queryResult = noteService.updateNote(noteId, newTitle, newDescription);
         }
 
-        if (queryResult==1){
-        model.addAttribute("successMessage",true);
-        model.addAttribute("successMessage", "Your note was added successfully");
-
-        }else{
-            model.addAttribute("successMessage",true);
-            model.addAttribute("successMessage", "Your note was added successfully");
-        }
-
         Integer userId = userService.getUser(username).getUserId();
         model.addAttribute("notes", noteService.getNotes(userId));
+//
+//        if (queryResult==1){
+//        model.addAttribute("successMessage",true);
+//        model.addAttribute("successMessage", "Your note was added successfully");
+//
+//        }else{
+//            model.addAttribute("successMessage",true);
+//            model.addAttribute("successMessage", "Your note was added successfully");
+//        }
 
-        return "redirect:/result";
+
+        model.addAttribute("result", "success");
+       // model.addAttribute("successMessage", "Your note has been saved");
+        return "result";
     }
 
 
@@ -63,7 +67,8 @@ public class NoteController {
     @GetMapping("/delete-note/{noteId}")
     public String removeNote(@PathVariable(value = "noteId") Integer noteId, Authentication auth,  Model model){
     noteService.deleteNote(noteId);
-    return "redirect:/result";
+    model.addAttribute("result", "success");
+    return "result";
 
     }
 

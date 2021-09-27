@@ -49,23 +49,29 @@ public class CredentialController {
         String newUrl = credential.getUrl();
         String newUsername = credential.getUsername();
         String newPassword = credential.getPassword();
+
+
 //        credential.setKey("Jj4lnbHeFj");
 //        String encryptedPassword = encryptionService.encryptValue(newPassword,credential.getKey());
         if (credentialId == null){
             credentialService.addCredentials(newUrl,newUsername,newPassword,userId);
         }
         else{
-            credentialService.modifyCredential(credentialId,newUrl, newUsername, newPassword);
+            credentialService.updateCredential(credentialId,newUrl, newUsername, newPassword);
         }
         model.addAttribute("credentials", credentialService.getCredentials(userId));
-        return "redirect:/home";
+
+        model.addAttribute("result", "success");
+        return "result";
     }
 
 
     @GetMapping("/delete-credential/{credentialId}")
     public String removeCredential(@PathVariable(value = "credentialId") Integer credentialId, Authentication auth,  Model model){
         credentialService.deleteCredential(credentialId);
-        return "redirect:/home";
+        model.addAttribute("result", "success");
+        return "result";
+
 
     };
 

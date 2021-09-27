@@ -67,7 +67,9 @@ public class FileUploadController {
             System.out.println("Incorrect");
         }
         model.addAttribute("files", fileService.getListOfFilesForUsers(userId));
-        return "redirect:/home";
+        model.addAttribute("result", "success");
+        return "result";
+
 
     }
 
@@ -76,7 +78,8 @@ public class FileUploadController {
         @GetMapping("/delete-file/{fileId}")
         public String removeFile(@PathVariable(value = "fileId") Integer fileId, Authentication auth,  Model model){
             fileService.deleteFile(fileId);
-            return "redirect:/home";
+            model.addAttribute("result", "success");
+            return "result";
 
         }
 

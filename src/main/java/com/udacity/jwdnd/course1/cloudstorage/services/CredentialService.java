@@ -23,20 +23,26 @@ public class CredentialService {
     }
 
     public void addCredentials( String  url,String username, String password, Integer userid) {
-        SecureRandom secureRandom = new SecureRandom();
-        byte[] key = new byte[16];
-        secureRandom.nextBytes(key);
-        String encodedKey = Base64.getEncoder().encodeToString(key);
+        String encodedKey = encodedKey();
         String encryptedPassword = encryptionService.encryptValue(password, encodedKey);
         Credential credential = new Credential(1,url, username,encodedKey,encryptedPassword, userid);
         credentialMapper.insert(credential);
     }
 
+    private String encodedKey(){
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] key = new byte[16];
+        secureRandom.nextBytes(key);
+        String encodedKey = Base64.getEncoder().encodeToString(key);
+        return encodedKey;
+
+    }
 
 
 
-    public void modifyCredential(Integer credentialId, String url, String username, String password) {
-        credentialMapper.updateCredentials(url, username, password);
+    public void updateCredential(Integer credentialId, String url, String username,String password) {
+        String encodedKey = encodedKey();
+        credentialMapper.updateCredentials(credentialId, url, username, encodedKey, password);
     }
 
     public void deleteCredential(Integer credentialId){
