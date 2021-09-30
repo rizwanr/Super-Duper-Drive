@@ -35,25 +35,20 @@ public class NotesPage {
     @FindBy(id = "deleteNote")
     private List<WebElement> deleteNote;
 
+
     public NotesPage(WebDriver driver) {
         PageFactory.initElements(driver, this);
     }
 
-    public void addNewNote(WebDriver driver, String title, String description){
-//        WebDriverWait wait = new WebDriverWait(driver, 10);
-//        WebElement marker = wait.until(webDriver -> webDriver.findElement(By.id("nav-notes-tab")));
+    public void addNewNote(WebDriver driver, String title, String description) {
+        WebDriverWait wait = new WebDriverWait(driver, 1000);
+        WebElement notesTab = wait.until(webDriver -> webDriver.findElement(By.id("nav-notes-tab")));
         notesTab.click();
-        WebDriverWait wait = new WebDriverWait(driver, 60000);
-        WebElement marker = wait.until(webDriver -> webDriver.findElement(By.id("addNewNote")));
+        WebElement addNewNoteButton = wait.until(webDriver -> webDriver.findElement(By.id("addNewNote")));
         addNewNoteButton.click();
-
-        WebDriverWait wait3 = new WebDriverWait(driver, 60000);
-        WebElement marker3 = wait.until(webDriver -> webDriver.findElement(By.id("note-description")));
-
         this.title.sendKeys(title);
-        this.description.sendKeys();
-        WebDriverWait wait2 = new WebDriverWait(driver, 60000);
-        WebElement marker2 = wait.until(webDriver -> webDriver.findElement(By.id("saveNotebutton")));
+        this.description.sendKeys(description);
+        WebElement saveNoteButton = wait.until(webDriver -> webDriver.findElement(By.id("saveNotebutton")));
         saveNoteButton.click();
 
     }

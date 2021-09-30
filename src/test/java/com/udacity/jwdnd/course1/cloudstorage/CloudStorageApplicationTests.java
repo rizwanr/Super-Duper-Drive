@@ -60,7 +60,7 @@ class CloudStorageApplicationTests {
 	}
 
 	@Test
-	public void testAddingNewNote(){
+	public void testAddingNewNote() {
 		String title="Test";
 		String description="efwfdsfs";
 		testUserSignupAndLogin();
@@ -72,7 +72,7 @@ class CloudStorageApplicationTests {
 	}
 
 	@Test
-	public void deleteANote(){
+	public void deleteANote() throws InterruptedException {
 		testAddingNewNote();
 		NotesPage notesPage = new NotesPage(driver);
 		notesPage.deleteNote(driver);
