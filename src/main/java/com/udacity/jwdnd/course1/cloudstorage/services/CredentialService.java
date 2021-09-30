@@ -42,7 +42,8 @@ public class CredentialService {
 
     public void updateCredential(Integer credentialId, String url, String username,String password) {
         String encodedKey = encodedKey();
-        credentialMapper.updateCredentials(credentialId, url, username, encodedKey, password);
+        String encryptedPassword = encryptionService.encryptValue(password, encodedKey);
+        credentialMapper.updateCredentials(credentialId, url, username, encodedKey, encryptedPassword);
     }
 
     public void deleteCredential(Integer credentialId){

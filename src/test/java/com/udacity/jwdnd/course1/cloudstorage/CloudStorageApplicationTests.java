@@ -1,5 +1,8 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
+import com.udacity.jwdnd.course1.cloudstorage.Page.LoginPage;
+import com.udacity.jwdnd.course1.cloudstorage.Page.NotesPage;
+import com.udacity.jwdnd.course1.cloudstorage.Page.SignupPage;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
@@ -11,7 +14,8 @@ import org.springframework.boot.web.server.LocalServerPort;
 class CloudStorageApplicationTests {
 
 	@LocalServerPort
-	private int port;
+	private Integer Port;
+	private String Base_URL="http://localhost:";
 
 	private WebDriver driver;
 
@@ -34,8 +38,47 @@ class CloudStorageApplicationTests {
 
 	@Test
 	public void getLoginPage() {
-		driver.get("http://localhost:" + this.port + "/login");
+		driver.get(Base_URL + this.Port + "/login");
 		Assertions.assertEquals("Login", driver.getTitle());
+	}
+
+	@Test
+	public void testUserSignupAndLogin(){
+		String firstName = "Rizwan";
+		String lastName = "Renesa";
+		String username = "renesa";
+		String password ="rjcjehakfur";
+		driver.get(Base_URL + this.Port + "/signup");
+		SignupPage signupPage = new SignupPage(driver);
+		signupPage.signup(firstName,lastName,username,password);
+		signupPage.navigateToLoginPage();
+
+		LoginPage loginPage = new LoginPage(driver);
+		loginPage.login(username,password);
+		Assertions.assertEquals("Home", driver.getTitle());
+
+	}
+
+	@Test
+	public void testAddingNewNote(){
+		String title="Test";
+		String description="efwfdsfs";
+		testUserSignupAndLogin();
+		NotesPage notesPage = new NotesPage(driver);
+		notesPage.addNewNote(driver,title,description);
+
+		Assertions.assertEquals("Result", driver.getTitle());
+
+	}
+
+	@Test
+	public void deleteANote(){
+		testAddingNewNote();
+		NotesPage notesPage = new NotesPage(driver);
+		notesPage.deleteNote(driver);
+		Assertions.assertEquals("Result", driver.getTitle());
+
+
 	}
 
 }
