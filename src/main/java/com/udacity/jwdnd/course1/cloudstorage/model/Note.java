@@ -19,6 +19,11 @@ public class Note {
         this.userid = userId;
     }
 
+    public Note(String title, String description) {
+        this.noteTitle=title;
+        this.noteDescription=description;
+    }
+
     public Integer getUserid() {
         return userid;
     }

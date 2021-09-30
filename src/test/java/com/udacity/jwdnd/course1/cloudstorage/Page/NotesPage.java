@@ -1,6 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.Page;
 
-import org.openqa.selenium.By;
+import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -29,35 +29,80 @@ public class NotesPage {
     @FindBy(id="saveNotebutton")
     private WebElement saveNoteButton;
 
+
+    @FindBy(id="addTitle")
+    private WebElement tbTitleText;
+
+    @FindBy(id="addDescription")
+    private WebElement tbDescriptionText;
+
     @FindBy(id = "btnEditNote")
-    private List<WebElement> editNote;
+    private  List<WebElement> editNote;
 
     @FindBy(id = "deleteNote")
     private List<WebElement> deleteNote;
 
+
+
+
+    ResultPage resultPage;
+    WebDriverWait wait;
 
     public NotesPage(WebDriver driver) {
         PageFactory.initElements(driver, this);
     }
 
     public void addNewNote(WebDriver driver, String title, String description) {
-        WebDriverWait wait = new WebDriverWait(driver, 1000);
-        WebElement notesTab = wait.until(webDriver -> webDriver.findElement(By.id("nav-notes-tab")));
         notesTab.click();
-        WebElement addNewNoteButton = wait.until(webDriver -> webDriver.findElement(By.id("addNewNote")));
-        addNewNoteButton.click();
-        this.title.sendKeys(title);
-        this.description.sendKeys(description);
-        WebElement saveNoteButton = wait.until(webDriver -> webDriver.findElement(By.id("saveNotebutton")));
-        saveNoteButton.click();
+        wait = new WebDriverWait(driver, 20);
+        wait.until(ExpectedConditions.elementToBeClickable(addNewNoteButton)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(this.title)).sendKeys(title);
+        wait.until(ExpectedConditions.elementToBeClickable(this.description)).sendKeys(description);
+        wait.until(ExpectedConditions.elementToBeClickable(saveNoteButton)).click();
+
+
 
     }
 
     public void deleteNote(WebDriver driver){
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        resultPage = new ResultPage(driver);
+        resultPage.returnToHome();
+        wait = new WebDriverWait(driver, 20);
+        wait.until(ExpectedConditions.elementToBeClickable(notesTab)).click();
         wait.until(ExpectedConditions.visibilityOf(notesTab)).click();
         wait.until(ExpectedConditions.visibilityOf(deleteNote.get(0))).click();
     }
+
+    public void editNote(WebDriver driver, String title, String description){
+        resultPage = new ResultPage(driver);
+        resultPage.returnToHome();
+        wait = new WebDriverWait(driver, 20);
+        notesTab.click();
+        wait.until(ExpectedConditions.elementToBeClickable(editNote.get(0))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(this.title)).clear();
+        wait.until(ExpectedConditions.elementToBeClickable(this.description)).clear();
+        wait.until(ExpectedConditions.elementToBeClickable(this.title)).sendKeys(title);
+        wait.until(ExpectedConditions.elementToBeClickable(this.description)).sendKeys(description);
+        wait.until(ExpectedConditions.elementToBeClickable(saveNoteButton)).click();
+        resultPage.returnToHome();
+        notesTab.click();
+
+
+
+    }
+
+
+    public Note getFirstNote(WebDriver driver) {
+        wait = new WebDriverWait(driver, 20);
+        String title = wait.until(ExpectedConditions.elementToBeClickable(tbTitleText)).getText();
+        String description = tbDescriptionText.getText();
+
+        return new Note(title, description);
+    }
+
+
+
+
 
 
 

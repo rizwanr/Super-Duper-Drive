@@ -1,8 +1,10 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
+import com.udacity.jwdnd.course1.cloudstorage.Page.HomePage;
 import com.udacity.jwdnd.course1.cloudstorage.Page.LoginPage;
 import com.udacity.jwdnd.course1.cloudstorage.Page.NotesPage;
 import com.udacity.jwdnd.course1.cloudstorage.Page.SignupPage;
+import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
@@ -57,7 +59,29 @@ class CloudStorageApplicationTests {
 		loginPage.login(username,password);
 		Assertions.assertEquals("Home", driver.getTitle());
 
+
 	}
+
+	@Test
+	public void testUserLogout(){
+		testUserSignupAndLogin();
+		HomePage homepage= new HomePage(driver);
+		homepage.logout();
+		Assertions.assertEquals("Login", driver.getTitle());
+
+	}
+
+	@Test
+	public void preventUnauthorizedAccess(){
+		driver.get(Base_URL + this.Port + "/home");
+		Assertions.assertEquals("Login", driver.getTitle());
+		driver.get(Base_URL + this.Port + "/signup");
+		Assertions.assertEquals("Sign Up", driver.getTitle());
+	}
+
+
+
+
 
 	@Test
 	public void testAddingNewNote() {
@@ -66,17 +90,36 @@ class CloudStorageApplicationTests {
 		testUserSignupAndLogin();
 		NotesPage notesPage = new NotesPage(driver);
 		notesPage.addNewNote(driver,title,description);
-
 		Assertions.assertEquals("Result", driver.getTitle());
+
+
+
 
 	}
 
 	@Test
-	public void deleteANote() throws InterruptedException {
+	public void deleteANote() {
 		testAddingNewNote();
 		NotesPage notesPage = new NotesPage(driver);
 		notesPage.deleteNote(driver);
 		Assertions.assertEquals("Result", driver.getTitle());
+
+
+	}
+
+	@Test
+	public void modifyNote() {
+		String editedTitle ="EditedTest";
+		String editedDescription = "EditedDescription";
+		testAddingNewNote();
+		NotesPage notesPage = new NotesPage(driver);
+		notesPage.editNote(driver,editedTitle,editedDescription);
+		Note note = notesPage.getFirstNote(driver);
+		Assertions.assertEquals(editedTitle,note.getNoteTitle());
+		Assertions.assertEquals(editedDescription, note.getNoteDescription());
+
+
+
 
 
 	}
