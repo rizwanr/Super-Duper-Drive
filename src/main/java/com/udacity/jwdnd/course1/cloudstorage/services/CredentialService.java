@@ -56,6 +56,9 @@ public class CredentialService {
         return  credentialMapper.getCredentialsForUser(userId);
     }
 
+    public Credential getCredentialByUsername(String username){
+        return credentialMapper.getCredentialByUsername(username);
+    }
 
 
 

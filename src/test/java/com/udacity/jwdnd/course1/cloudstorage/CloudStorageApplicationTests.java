@@ -1,10 +1,9 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
-import com.udacity.jwdnd.course1.cloudstorage.Page.HomePage;
-import com.udacity.jwdnd.course1.cloudstorage.Page.LoginPage;
-import com.udacity.jwdnd.course1.cloudstorage.Page.NotesPage;
-import com.udacity.jwdnd.course1.cloudstorage.Page.SignupPage;
+import com.udacity.jwdnd.course1.cloudstorage.Page.*;
+import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
+import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
@@ -118,9 +117,25 @@ class CloudStorageApplicationTests {
 		Assertions.assertEquals(editedTitle,note.getNoteTitle());
 		Assertions.assertEquals(editedDescription, note.getNoteDescription());
 
+	}
+
+	@Test
+	public void createCredentialAndVerifyPasswordEncrypted() throws Exception {
+		String url ="www.facebook.com";
+		String username = "rizwan";
+		String password ="testpassword";
+		EncryptionService encryptionService = new EncryptionService();
+		CredentialsPage credentialsPage = new CredentialsPage(driver);
 
 
+		testUserSignupAndLogin();
+		credentialsPage.addCredential(driver,url,username,password);
+		Credential credential = credentialsPage.getFirstCredential(driver);
+		String encryptedPassword =credential.getPassword();
 
+		String credentialInDB= credentialsPage.getEncryptedPassword(username);
+
+		Assertions.assertEquals(encryptedPassword,credentialsPage.getEncryptedPassword(username));
 
 	}
 

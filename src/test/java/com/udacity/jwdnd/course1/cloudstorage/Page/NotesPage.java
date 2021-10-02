@@ -11,6 +11,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.List;
 
 public class NotesPage {
+
+    ResultPage resultPage;
+    WebDriverWait wait;
+
     @FindBy(id="nav-notes-tab")
     private WebElement notesTab;
 
@@ -21,10 +25,10 @@ public class NotesPage {
     private WebElement submitLoginButton;
 
     @FindBy(id="note-title")
-    private WebElement title;
+    private WebElement textboxTitle;
 
     @FindBy(id="note-description")
-    private WebElement description;
+    private WebElement texboxDescription;
 
     @FindBy(id="saveNotebutton")
     private WebElement saveNoteButton;
@@ -43,11 +47,6 @@ public class NotesPage {
     private List<WebElement> deleteNote;
 
 
-
-
-    ResultPage resultPage;
-    WebDriverWait wait;
-
     public NotesPage(WebDriver driver) {
         PageFactory.initElements(driver, this);
     }
@@ -56,8 +55,8 @@ public class NotesPage {
         notesTab.click();
         wait = new WebDriverWait(driver, 20);
         wait.until(ExpectedConditions.elementToBeClickable(addNewNoteButton)).click();
-        wait.until(ExpectedConditions.elementToBeClickable(this.title)).sendKeys(title);
-        wait.until(ExpectedConditions.elementToBeClickable(this.description)).sendKeys(description);
+        wait.until(ExpectedConditions.elementToBeClickable(textboxTitle)).sendKeys(title);
+        wait.until(ExpectedConditions.elementToBeClickable(texboxDescription)).sendKeys(description);
         wait.until(ExpectedConditions.elementToBeClickable(saveNoteButton)).click();
 
 
@@ -79,10 +78,10 @@ public class NotesPage {
         wait = new WebDriverWait(driver, 20);
         notesTab.click();
         wait.until(ExpectedConditions.elementToBeClickable(editNote.get(0))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(this.title)).clear();
-        wait.until(ExpectedConditions.elementToBeClickable(this.description)).clear();
-        wait.until(ExpectedConditions.elementToBeClickable(this.title)).sendKeys(title);
-        wait.until(ExpectedConditions.elementToBeClickable(this.description)).sendKeys(description);
+        wait.until(ExpectedConditions.elementToBeClickable(textboxTitle)).clear();
+        wait.until(ExpectedConditions.elementToBeClickable(texboxDescription)).clear();
+        wait.until(ExpectedConditions.elementToBeClickable(textboxTitle)).sendKeys(title);
+        wait.until(ExpectedConditions.elementToBeClickable(texboxDescription)).sendKeys(description);
         wait.until(ExpectedConditions.elementToBeClickable(saveNoteButton)).click();
         resultPage.returnToHome();
         notesTab.click();
@@ -96,7 +95,6 @@ public class NotesPage {
         wait = new WebDriverWait(driver, 20);
         String title = wait.until(ExpectedConditions.elementToBeClickable(tbTitleText)).getText();
         String description = tbDescriptionText.getText();
-
         return new Note(title, description);
     }
 
