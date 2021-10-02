@@ -14,6 +14,8 @@ import org.springframework.boot.web.server.LocalServerPort;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CloudStorageApplicationTests {
 
+
+
 	@LocalServerPort
 	private Integer Port;
 	private String Base_URL="http://localhost:";
@@ -124,6 +126,7 @@ class CloudStorageApplicationTests {
 		String url ="www.facebook.com";
 		String username = "rizwan";
 		String password ="testpassword";
+		Integer userId=1;
 		EncryptionService encryptionService = new EncryptionService();
 		CredentialsPage credentialsPage = new CredentialsPage(driver);
 
@@ -133,9 +136,19 @@ class CloudStorageApplicationTests {
 		Credential credential = credentialsPage.getFirstCredential(driver);
 		String encryptedPassword =credential.getPassword();
 
-		String credentialInDB= credentialsPage.getEncryptedPassword(username);
+		String passwordInDB= credentialsPage.getEncryptedPassword(1);
 
-		Assertions.assertEquals(encryptedPassword,credentialsPage.getEncryptedPassword(username));
+		Assertions.assertEquals(encryptedPassword,passwordInDB);
+
+	}
+
+	@Test
+	public void deleteACredential() throws Exception {
+		createCredentialAndVerifyPasswordEncrypted();
+		CredentialsPage credentialsPage = new CredentialsPage(driver);
+		credentialsPage.deleteCredential(driver);
+		Assertions.assertEquals("Result", driver.getTitle());
+
 
 	}
 

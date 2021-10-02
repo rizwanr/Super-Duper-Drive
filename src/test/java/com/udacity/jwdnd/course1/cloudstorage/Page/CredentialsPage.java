@@ -1,10 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.Page;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
-import com.udacity.jwdnd.course1.cloudstorage.model.User;
-import com.udacity.jwdnd.course1.cloudstorage.services.AuthenticationService;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
-import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,6 +9,9 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 public class CredentialsPage {
 
@@ -24,9 +24,6 @@ public class CredentialsPage {
     ResultPage resultPage;
     WebDriverWait wait;
     UserService userService;
-    CredentialService credentialService;
-    EncryptionService encryptionService;
-    AuthenticationService authenticationService;
 
     @FindBy(id="nav-credentials-tab")
     private WebElement credentialTab;
@@ -57,6 +54,14 @@ public class CredentialsPage {
     @FindBy(id="tbrowpassword")
     public WebElement tbrowPassword;
 
+
+    @FindBy(id = "deleteCredential")
+    private List<WebElement> deleteCredential;
+
+    @Autowired
+    private CredentialService credentialService;
+
+
     public CredentialsPage(WebDriver driver) {
         PageFactory.initElements(driver, this);
 
@@ -86,18 +91,25 @@ public class CredentialsPage {
     }
 
 
-    private String getDecryptedPassword(String encryptedPassword) throws Exception {
-        User user = userService.getUser("r");
+//    private String getDecryptedPassword(String encryptedPassword) throws Exception {
+//        User user = userService.getUser("r");
+//
+//        credentialService.getCredentials(user.getUserId()).get(0);
+//        //return encryptionService.decryptValue(encryptedPassword, credential.getKey());
+//    }
 
-        Credential credential = credentialService.getCredentials(user.getUserId()).get(0);
-        return encryptionService.decryptValue(encryptedPassword, credential.getKey());
-    }
+    public  String getEncryptedPassword(Integer userId) throws Exception {
+        String encryptedPassword= credentialService.getCredentials(userId).get(0).getPassword();
 
-    public  String getEncryptedPassword(String username) throws Exception {
-
-        String encryptedPassword = credentialService.getCredentialByUsername(username).getPassword();
         return encryptedPassword;
 
+
+
+    }
+
+    public void deleteCredential(WebDriver driver){
+        wait = new WebDriverWait(driver, 20);
+        wait.until(ExpectedConditions.visibilityOf(deleteCredential.get(0))).click();
 
 
     }
