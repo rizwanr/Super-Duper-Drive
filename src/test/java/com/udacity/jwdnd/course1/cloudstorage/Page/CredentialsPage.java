@@ -2,6 +2,7 @@ package com.udacity.jwdnd.course1.cloudstorage.Page;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
+import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -9,7 +10,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -58,12 +58,19 @@ public class CredentialsPage {
     @FindBy(id = "deleteCredential")
     private List<WebElement> deleteCredential;
 
-    @Autowired
+
+    @FindBy(id="btnEditCredential")
+    private List<WebElement> editCredentialButton;
+
+
     private CredentialService credentialService;
+    private EncryptionService encryptionService;
 
 
-    public CredentialsPage(WebDriver driver) {
+    public CredentialsPage(WebDriver driver, CredentialService credentialService, EncryptionService encryptionService) {
         PageFactory.initElements(driver, this);
+        this.credentialService = credentialService;
+        this.encryptionService = encryptionService;
 
 
     }
@@ -91,21 +98,28 @@ public class CredentialsPage {
     }
 
 
-//    private String getDecryptedPassword(String encryptedPassword) throws Exception {
-//        User user = userService.getUser("r");
-//
-//        credentialService.getCredentials(user.getUserId()).get(0);
-//        //return encryptionService.decryptValue(encryptedPassword, credential.getKey());
-//    }
+    public String getDecryptedPassword(String  username, CredentialService credentialService, EncryptionService encryptionService) throws Exception {
 
-    public  String getEncryptedPassword(Integer userId) throws Exception {
-        String encryptedPassword= credentialService.getCredentials(userId).get(0).getPassword();
+
+        String encryptedPassword = getEncryptedPassword(username,credentialService);
+        String key = credentialService.getCredentialByUsername(username).getKey();
+        return encryptionService.decryptValue(encryptedPassword, key);
+    }
+
+
+
+    public  String getEncryptedPassword( String  username, CredentialService credentialService) throws Exception {
+
+        Credential credential = credentialService.getCredentialByUsername(username);
+
+        String encryptedPassword=credential.getPassword();
 
         return encryptedPassword;
 
 
 
     }
+
 
     public void deleteCredential(WebDriver driver){
         wait = new WebDriverWait(driver, 20);
@@ -115,9 +129,26 @@ public class CredentialsPage {
     }
 
 
+    public void editCredential(WebDriver driver, String url, String username, String password) throws InterruptedException {
+        wait = new WebDriverWait(driver, 20);
+        wait.until(ExpectedConditions.elementToBeClickable(editCredentialButton.get(0))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(textboxUrl)).clear();
+        wait.until(ExpectedConditions.elementToBeClickable(textboxUsername)).clear();
+        wait.until(ExpectedConditions.elementToBeClickable(textboxPassword)).clear();
+        wait.until(ExpectedConditions.elementToBeClickable(textboxUrl)).sendKeys(url);
+        wait.until(ExpectedConditions.elementToBeClickable(textboxUsername)).sendKeys(username);
+        wait.until(ExpectedConditions.elementToBeClickable(textboxPassword)).sendKeys(password);
+        wait.until(ExpectedConditions.elementToBeClickable(saveCredential)).click();
+        resultPage = new ResultPage(driver);
+        resultPage.returnToHome();
+        credentialTab.click();
 
 
 
 
 
+
+
+
+    }
 }

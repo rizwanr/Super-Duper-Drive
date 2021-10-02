@@ -3,24 +3,36 @@ package com.udacity.jwdnd.course1.cloudstorage;
 import com.udacity.jwdnd.course1.cloudstorage.Page.*;
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
+import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CloudStorageApplicationTests {
 
+	private CredentialsPage credentialsPage;
+	private WebDriver driver;
 
+
+
+
+	@Autowired
+	private CredentialService credentialService;
+
+	@Autowired
+	private EncryptionService encryptionService;
 
 	@LocalServerPort
 	private Integer Port;
 	private String Base_URL="http://localhost:";
 
-	private WebDriver driver;
+
 
 	@BeforeAll
 	static void beforeAll() {
@@ -38,6 +50,8 @@ class CloudStorageApplicationTests {
 			driver.quit();
 		}
 	}
+
+
 
 	@Test
 	public void getLoginPage() {
@@ -126,9 +140,8 @@ class CloudStorageApplicationTests {
 		String url ="www.facebook.com";
 		String username = "rizwan";
 		String password ="testpassword";
-		Integer userId=1;
 		EncryptionService encryptionService = new EncryptionService();
-		CredentialsPage credentialsPage = new CredentialsPage(driver);
+		credentialsPage = new CredentialsPage(driver,credentialService,encryptionService);
 
 
 		testUserSignupAndLogin();
@@ -136,7 +149,8 @@ class CloudStorageApplicationTests {
 		Credential credential = credentialsPage.getFirstCredential(driver);
 		String encryptedPassword =credential.getPassword();
 
-		String passwordInDB= credentialsPage.getEncryptedPassword(1);
+		String passwordInDB= credentialsPage.getEncryptedPassword(username,credentialService);
+
 
 		Assertions.assertEquals(encryptedPassword,passwordInDB);
 
@@ -145,9 +159,32 @@ class CloudStorageApplicationTests {
 	@Test
 	public void deleteACredential() throws Exception {
 		createCredentialAndVerifyPasswordEncrypted();
-		CredentialsPage credentialsPage = new CredentialsPage(driver);
 		credentialsPage.deleteCredential(driver);
 		Assertions.assertEquals("Result", driver.getTitle());
+
+
+	}
+
+	//Write a test that views an existing set of credentials, verifies that the viewable password is unencrypted,
+	// edits the credentials, and verifies that the changes are displayed.
+
+	@Test
+	public void editACredentialAndVerifiesChangesDisplayed() throws Exception {
+
+
+		String editedurl ="EditedTest";
+		String editedusername = "EditedDescription";
+		String editedpassword = "EditedPassword";
+
+		createCredentialAndVerifyPasswordEncrypted();
+
+		CredentialsPage  credentialsPage  = new CredentialsPage(driver,credentialService,encryptionService);
+		credentialsPage.editCredential(driver,editedurl,editedusername,editedpassword);
+		Credential credential = credentialsPage.getFirstCredential(driver);
+		String decryptedPassword= credentialsPage.getDecryptedPassword(editedusername,credentialService,encryptionService);
+		Assertions.assertEquals(editedurl,credential.getUrl());
+		Assertions.assertEquals(editedusername, credential.getUsername());
+		Assertions.assertEquals(editedpassword,decryptedPassword);
 
 
 	}

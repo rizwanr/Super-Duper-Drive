@@ -24,8 +24,11 @@ public interface  CredentialMapper {
         int updateCredentials(Integer credentialId, String url, String username, String key, String password);
 
 
-        @Select("Select * from CREDENTIALS where username = #{username}")
-        Credential getCredentialByUsername(String username);
+        @Select("Select * from CREDENTIALS where credentialid = #{credentialId}")
+        Credential getCredentialByCredentialId(Integer credentialId);
 
+
+        @Select("Select * from CREDENTIALS where username=#{username}")
+        Credential getCredentialByUsername(String username);
 
 }
