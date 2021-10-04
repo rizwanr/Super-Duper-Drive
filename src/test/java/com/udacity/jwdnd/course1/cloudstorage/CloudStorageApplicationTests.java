@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CloudStorageApplicationTests {
 
 	private CredentialsPage credentialsPage;
@@ -53,13 +54,21 @@ class CloudStorageApplicationTests {
 
 
 
+
 	@Test
-	public void getLoginPage() {
+	@Order(2)
+	public void login() throws InterruptedException {
+		String username = "renesa";
+		String password ="rjcjehakfur";
 		driver.get(Base_URL + this.Port + "/login");
-		Assertions.assertEquals("Login", driver.getTitle());
+		LoginPage loginPage = new LoginPage(driver);
+		loginPage.login(driver,username,password);
+		Thread.sleep(2000);
+		Assertions.assertEquals("Home", driver.getTitle());
 	}
 
 	@Test
+	@Order(1)
 	public void testUserSignupAndLogin(){
 		String firstName = "Rizwan";
 		String lastName = "Renesa";
@@ -71,15 +80,21 @@ class CloudStorageApplicationTests {
 		signupPage.navigateToLoginPage();
 
 		LoginPage loginPage = new LoginPage(driver);
-		loginPage.login(username,password);
+		loginPage.login(driver,username,password);
 		Assertions.assertEquals("Home", driver.getTitle());
 
 
 	}
 
+
+
+
+
+
 	@Test
-	public void testUserLogout(){
-		testUserSignupAndLogin();
+	@Order(3)
+	public void testUserLogout() throws InterruptedException {
+		login();
 		HomePage homepage= new HomePage(driver);
 		homepage.logout();
 		Assertions.assertEquals("Login", driver.getTitle());
@@ -87,7 +102,8 @@ class CloudStorageApplicationTests {
 	}
 
 	@Test
-	public void preventUnauthorizedAccess(){
+	@Order(4)
+	public void preventUnauthorizedAccess() throws InterruptedException {
 		driver.get(Base_URL + this.Port + "/home");
 		Assertions.assertEquals("Login", driver.getTitle());
 		driver.get(Base_URL + this.Port + "/signup");
@@ -99,21 +115,22 @@ class CloudStorageApplicationTests {
 
 
 	@Test
-	public void testAddingNewNote() {
+	@Order(5)
+	public void testAddingNewNote() throws InterruptedException {
+
 		String title="Test";
 		String description="efwfdsfs";
-		testUserSignupAndLogin();
+		login();
 		NotesPage notesPage = new NotesPage(driver);
 		notesPage.addNewNote(driver,title,description);
 		Assertions.assertEquals("Result", driver.getTitle());
 
-
-
-
 	}
 
 	@Test
-	public void deleteANote() {
+	@Order(6)
+	public void deleteANote() throws InterruptedException {
+
 		testAddingNewNote();
 		NotesPage notesPage = new NotesPage(driver);
 		notesPage.deleteNote(driver);
@@ -123,7 +140,9 @@ class CloudStorageApplicationTests {
 	}
 
 	@Test
-	public void modifyNote() {
+	@Order(7)
+	public void modifyNote() throws InterruptedException {
+
 		String editedTitle ="EditedTest";
 		String editedDescription = "EditedDescription";
 		testAddingNewNote();
@@ -136,7 +155,9 @@ class CloudStorageApplicationTests {
 	}
 
 	@Test
+	@Order(8)
 	public void createCredentialAndVerifyPasswordEncrypted() throws Exception {
+
 		String url ="www.facebook.com";
 		String username = "rizwan";
 		String password ="testpassword";
@@ -144,7 +165,8 @@ class CloudStorageApplicationTests {
 		credentialsPage = new CredentialsPage(driver,credentialService,encryptionService);
 
 
-		testUserSignupAndLogin();
+
+		login();
 		credentialsPage.addCredential(driver,url,username,password);
 		Credential credential = credentialsPage.getFirstCredential(driver);
 		String encryptedPassword =credential.getPassword();
@@ -157,26 +179,14 @@ class CloudStorageApplicationTests {
 	}
 
 	@Test
-	public void deleteACredential() throws Exception {
-		createCredentialAndVerifyPasswordEncrypted();
-		credentialsPage.deleteCredential(driver);
-		Assertions.assertEquals("Result", driver.getTitle());
-
-
-	}
-
-	//Write a test that views an existing set of credentials, verifies that the viewable password is unencrypted,
-	// edits the credentials, and verifies that the changes are displayed.
-
-	@Test
+	@Order(9)
 	public void editACredentialAndVerifiesChangesDisplayed() throws Exception {
 
 
 		String editedurl ="EditedTest";
 		String editedusername = "EditedDescription";
 		String editedpassword = "EditedPassword";
-
-		createCredentialAndVerifyPasswordEncrypted();
+		login();
 
 		CredentialsPage  credentialsPage  = new CredentialsPage(driver,credentialService,encryptionService);
 		credentialsPage.editCredential(driver,editedurl,editedusername,editedpassword);
@@ -188,5 +198,21 @@ class CloudStorageApplicationTests {
 
 
 	}
+
+	@Test
+	@Order(10)
+	public void deleteACredential() throws Exception {
+		login();
+		CredentialsPage  credentialsPage = new CredentialsPage(driver,credentialService,encryptionService);
+		credentialsPage.deleteCredential(driver);
+		Assertions.assertEquals("Result", driver.getTitle());
+
+
+	}
+
+	//Write a test that views an existing set of credentials, verifies that the viewable password is unencrypted,
+	// edits the credentials, and verifies that the changes are displayed.
+
+
 
 }

@@ -123,6 +123,7 @@ public class CredentialsPage {
 
     public void deleteCredential(WebDriver driver){
         wait = new WebDriverWait(driver, 20);
+        wait.until(ExpectedConditions.visibilityOf(credentialTab)).click();
         wait.until(ExpectedConditions.visibilityOf(deleteCredential.get(0))).click();
 
 
@@ -131,6 +132,7 @@ public class CredentialsPage {
 
     public void editCredential(WebDriver driver, String url, String username, String password) throws InterruptedException {
         wait = new WebDriverWait(driver, 20);
+        credentialTab.click();
         wait.until(ExpectedConditions.elementToBeClickable(editCredentialButton.get(0))).click();
         wait.until(ExpectedConditions.elementToBeClickable(textboxUrl)).clear();
         wait.until(ExpectedConditions.elementToBeClickable(textboxUsername)).clear();
