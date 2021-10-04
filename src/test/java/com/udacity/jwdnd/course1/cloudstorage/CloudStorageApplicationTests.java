@@ -20,9 +20,6 @@ class CloudStorageApplicationTests {
 	private CredentialsPage credentialsPage;
 	private WebDriver driver;
 
-
-
-
 	@Autowired
 	private CredentialService credentialService;
 
@@ -53,20 +50,6 @@ class CloudStorageApplicationTests {
 	}
 
 
-
-
-	@Test
-	@Order(2)
-	public void login() throws InterruptedException {
-		String username = "renesa";
-		String password ="rjcjehakfur";
-		driver.get(Base_URL + this.Port + "/login");
-		LoginPage loginPage = new LoginPage(driver);
-		loginPage.login(driver,username,password);
-		Thread.sleep(2000);
-		Assertions.assertEquals("Home", driver.getTitle());
-	}
-
 	@Test
 	@Order(1)
 	public void testUserSignupAndLogin(){
@@ -87,6 +70,19 @@ class CloudStorageApplicationTests {
 	}
 
 
+
+
+	@Test
+	@Order(2)
+	public void login() throws InterruptedException {
+		String username = "renesa";
+		String password ="rjcjehakfur";
+		driver.get(Base_URL + this.Port + "/login");
+		LoginPage loginPage = new LoginPage(driver);
+		loginPage.login(driver,username,password);
+		Thread.sleep(2000);
+		Assertions.assertEquals("Home", driver.getTitle());
+	}
 
 
 
@@ -112,8 +108,6 @@ class CloudStorageApplicationTests {
 
 
 
-
-
 	@Test
 	@Order(5)
 	public void testAddingNewNote() throws InterruptedException {
@@ -126,6 +120,7 @@ class CloudStorageApplicationTests {
 		Assertions.assertEquals("Result", driver.getTitle());
 
 	}
+
 
 	@Test
 	@Order(6)
